@@ -45,3 +45,6 @@ fix:
 # HACK: "home" button on this emulator is broken
 adb-home:
     adb shell input keyevent 3
+
+logcat:
+    adb logcat | grep "com.rmp.neet"
