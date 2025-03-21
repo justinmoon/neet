@@ -14,7 +14,9 @@ uniffi = { version = "0.29.1", features = ["cli"] }
 rust-multiplatform = { git = "https://github.com/justinmoon/rust-multiplatform", rev = "edf04d8" }
 android_logger = "0.15"
 log = "0.4"
-callme = { git = "https://github.com/n0-computer/callme" }
+# FIXME: Disabling default features turns off webrtc-audio-processing which was failing to compile
+# on android. Should turn it back on in future b/c it's a useful feature.
+callme = { git = "https://github.com/n0-computer/callme", default-features = false }
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = "0.15"

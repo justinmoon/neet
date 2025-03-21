@@ -12,7 +12,7 @@ pub fn init_logging() {
     {
         android_logger::init_once(
             android_logger::Config::default()
-                .with_min_level(log::Level::Info)
+                // .with_min_level(log::Level::Info)
                 .with_tag("counter-rs"),
         );
         log::info!("Android logging initialized");

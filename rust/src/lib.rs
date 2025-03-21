@@ -72,7 +72,7 @@ impl RmpModel {
     pub fn setup_logging(&self) {
         logging::init_logging();
     }
-    
+
     pub fn list_audio_devices(&self) -> String {
         match callme::audio::AudioContext::list_devices_sync() {
             Ok(devices) => {

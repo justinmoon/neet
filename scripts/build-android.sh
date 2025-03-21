@@ -29,7 +29,6 @@ cargo build
 cargo ndk -o ../android/app/src/main/jniLibs \
         --manifest-path ./Cargo.toml \
         -t armeabi-v7a \
-        -t arm64-v8a \
         build --release
  
 # Create Kotlin bindings
