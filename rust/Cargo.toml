@@ -12,14 +12,14 @@ crossbeam = "0.8.4"
 once_cell = "1.19.0"
 uniffi = { version = "0.29.1", features = ["cli"] }
 rust-multiplatform = { git = "https://github.com/justinmoon/rust-multiplatform", rev = "edf04d8" }
-android_logger = "0.15"
+android_logger = "0.10"
 log = "0.4"
 # FIXME: Disabling default features turns off webrtc-audio-processing which was failing to compile
 # on android. Should turn it back on in future b/c it's a useful feature.
 callme = { git = "https://github.com/n0-computer/callme", default-features = false }
 
 [target.'cfg(target_os = "android")'.dependencies]
-android_logger = "0.15"
+android_logger = "0.10"
 
 [target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
 oslog = "0.2"
