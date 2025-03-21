@@ -49,6 +49,11 @@
             androidSdk
             pkgs.just
             pkgs.watchexec
+            pkgs.libtool
+            pkgs.webrtc-audio-processing
+            pkgs.autoconf
+            pkgs.automake
+            pkgs.pkg-config
           ];
 
           shellHook = ''
@@ -59,6 +64,14 @@
             export ANDROID_SDK_ROOT=${androidSdk}/share/android-sdk
             export ANDROID_NDK_ROOT=${androidSdk}/share/android-sdk/ndk/28.0.13004108
             export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
+
+            # Create a local bin directory for symlinks
+            # webrtc-audio-processing looks for glibtoolize but nix installs it as libtoolize 
+            # https://github.com/tonarino/webrtc-audio-processing/blob/7f62ad3e815acf22b2925aca7501e8fc901104d3/webrtc-audio-processing-sys/build.rs#L93-L97
+            mkdir -p $PWD/.nix-shell/bin
+            ln -sf "${pkgs.libtool}/bin/libtoolize" "$PWD/.nix-shell/bin/glibtoolize"
+            export PATH=$PWD/.nix-shell/bin:${pkgs.libtool}/bin:$PATH
+            echo "Created glibtoolize symlink in $PWD/.nix-shell/bin"
 
             echo "Android development environment initialized!"
             echo "ANDROID_HOME: $ANDROID_HOME"
