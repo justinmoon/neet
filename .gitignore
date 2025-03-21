@@ -1,0 +1,11 @@
+*.pbmd
+.DS_Store
+
+# I think this is xcode???
+.build
+
+# nix / direnv
+.direnv
+
+# uniffi build
+android/app/src/main/java/com/rmp/neet/uniffi/
