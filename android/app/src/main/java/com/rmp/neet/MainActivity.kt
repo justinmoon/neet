@@ -12,6 +12,11 @@ import uniffi.neet.RmpModel
 class MainActivity : ComponentActivity() {
     companion object {
         private const val TAG = "MainActivity"
+        
+        // Load the Rust library
+        init {
+            System.loadLibrary("neet")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

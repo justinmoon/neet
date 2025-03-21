@@ -60,6 +60,21 @@ impl rust_multiplatform::traits::RmpAppModel for Model {
     }
 }
 
+#[cfg(target_os = "android")]
+#[no_mangle]
+pub extern "C" fn JNI_OnLoad(vm: jni::JavaVM, res: *mut std::os::raw::c_void) -> jni::sys::jint {
+    log::info!("JNI_OnLoad called");
+
+    // Initialize the Android context with the JavaVM and context
+    let vm_ptr = vm.get_java_vm_pointer() as *mut std::ffi::c_void;
+    unsafe {
+        ndk_context::initialize_android_context(vm_ptr, res);
+        log::info!("Android context initialized in JNI_OnLoad");
+    }
+
+    jni::JNIVersion::V6.into()
+}
+
 #[uniffi::export]
 impl RmpModel {
     pub fn get_count(&self) -> i32 {

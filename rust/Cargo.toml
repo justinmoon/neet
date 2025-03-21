@@ -20,6 +20,8 @@ callme = { git = "https://github.com/n0-computer/callme", default-features = fal
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = "0.10"
+jni = "0.21"
+ndk-context = "0.1"
 
 [target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
 oslog = "0.2"

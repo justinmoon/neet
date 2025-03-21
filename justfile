@@ -47,4 +47,4 @@ adb-home:
     adb shell input keyevent 3
 
 logcat:
-    adb logcat | grep "com.rmp.neet"
+    adb logcat | grep "neet"
