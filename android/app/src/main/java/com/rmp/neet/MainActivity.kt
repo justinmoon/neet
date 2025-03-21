@@ -2,15 +2,31 @@ package com.rmp.neet
 
 import Counter
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import uniffi.neet.RmpModel
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Create RmpModel to access Rust functions
+        val model = RmpModel(filesDir.absolutePath)
+        
+        // Setup logging
+        model.setupLogging()
+        
+        // List audio devices
+        val devices = model.listAudioDevices()
+        Log.i(TAG, "Audio devices: $devices")
+        
         setContent {
             App()
         }

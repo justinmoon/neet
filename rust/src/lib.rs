@@ -72,6 +72,19 @@ impl RmpModel {
     pub fn setup_logging(&self) {
         logging::init_logging();
     }
+    
+    pub fn list_audio_devices(&self) -> String {
+        match callme::audio::AudioContext::list_devices_sync() {
+            Ok(devices) => {
+                log::info!("Audio devices: {:?}", devices);
+                format!("{:?}", devices)
+            }
+            Err(err) => {
+                log::error!("Failed to list audio devices: {:?}", err);
+                format!("Error: {:?}", err)
+            }
+        }
+    }
 }
 
 /// Generate RmpModel and RmpViewModel from these
