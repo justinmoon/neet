@@ -1,10 +1,6 @@
 default:
     just --list
 
-# env:
-#     export ANDROID_HOME=/Users/justin/Library/Android/sdk
-#     alias emulator=$ANDROID_HOME/emulator/emulator
-
 create-emulator:
     avdmanager create avd --force --name emulator --package 'system-images;android-35;google_apis;arm64-v8a' --path $PWD/emulator -d pixel_6
 

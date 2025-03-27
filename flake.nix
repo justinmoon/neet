@@ -35,7 +35,7 @@
           with sdkPkgs; [
             # Essential build tools
             cmdline-tools-latest
-            build-tools-35-0-0 # FIXME: why does it want this?
+            build-tools-35-0-0
             platform-tools
 
             # Platform & API level
