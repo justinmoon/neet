@@ -29,7 +29,6 @@
           with sdkPkgs; [
             # Essential build tools
             cmdline-tools-latest
-            # build-tools-34-0-0
             build-tools-33-0-1 # FIXME: why does it want this?
             platform-tools
 
@@ -66,21 +65,12 @@
             export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
 
             # Create a local bin directory for symlinks
+            mkdir -p $PWD/.nix-shell/bin
+
             # webrtc-audio-processing looks for glibtoolize but nix installs it as libtoolize 
             # https://github.com/tonarino/webrtc-audio-processing/blob/7f62ad3e815acf22b2925aca7501e8fc901104d3/webrtc-audio-processing-sys/build.rs#L93-L97
-            mkdir -p $PWD/.nix-shell/bin
             ln -sf "${pkgs.libtool}/bin/libtoolize" "$PWD/.nix-shell/bin/glibtoolize"
             export PATH=$PWD/.nix-shell/bin:${pkgs.libtool}/bin:$PATH
-            echo "Created glibtoolize symlink in $PWD/.nix-shell/bin"
-
-            echo "Android development environment initialized!"
-            echo "ANDROID_HOME: $ANDROID_HOME"
-            echo "ANDROID_NDK_ROOT: $ANDROID_NDK_ROOT"
-            echo ""
-            echo "Available commands:"
-            echo "  just build-android  - Build the Android app"
-            echo "  just run-android    - Run the Android app on an emulator"
-            echo "  just run-emulator   - Launch the Android emulator"
           '';
         };
       }
