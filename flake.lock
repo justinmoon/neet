@@ -61,7 +61,41 @@
         "type": "github"
       }
     },
+    "justin": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1743113375,
+        "narHash": "sha256-PnTYKLOGaWAzzAt4K+s1+wU8WQX4LOXDcvK5M1+PoqU=",
+        "owner": "justinmoon",
+        "repo": "flakes",
+        "rev": "0e977b9174c109cd48212193ed9e6984e80a18f4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "justinmoon",
+        "repo": "flakes",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 1742889210,
+        "narHash": "sha256-hw63HnwnqU3ZQfsMclLhMvOezpM7RSB0dMAtD5/sOiw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "698214a32beb4f4c8e3942372c694f40848b360d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1742422364,
         "narHash": "sha256-mNqIplmEohk5jRkqYqG19GA8MbQ/D4gQSK0Mu4LvfRQ=",
@@ -80,7 +114,8 @@
     "root": {
       "inputs": {
         "android-nixpkgs": "android-nixpkgs",
-        "nixpkgs": "nixpkgs",
+        "justin": "justin",
+        "nixpkgs": "nixpkgs_2",
         "rust-overlay": "rust-overlay"
       }
     },

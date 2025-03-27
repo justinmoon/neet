@@ -1,9 +1,32 @@
 #!/bin/bash
 set -ex
-cd rust
 
-# FIXME: this is a hack to get xcode to find packages i installed via nix (like cargo)
-export PATH=$PATH:/etc/profiles/per-user/justin/bin
+# Fix cross-compilation issues
+unset MACOSX_DEPLOYMENT_TARGET
+export IPHONEOS_DEPLOYMENT_TARGET="14.0"
+
+# Make sure we use the iOS simulator SDK
+export SDKROOT=$(xcrun -sdk iphonesimulator --show-sdk-path)
+
+# Create compiler wrapper to avoid macOS flags
+mkdir -p .build/ios-wrapper
+cat > .build/ios-wrapper/clang-ios-sim << 'EOF'
+#!/bin/bash
+args=()
+for arg in "$@"; do
+  if [[ "$arg" != "-mmacos-version-min="* ]]; then
+    args+=("$arg")
+  fi
+done
+clang "${args[@]}" -mios-simulator-version-min=14.0
+EOF
+chmod +x .build/ios-wrapper/clang-ios-sim
+
+# Set compiler variables for this build process only
+export CC_aarch64_apple_ios_sim="$(pwd)/.build/ios-wrapper/clang-ios-sim"
+export CARGO_TARGET_AARCH64_APPLE_IOS_SIM_LINKER="$(pwd)/.build/ios-wrapper/clang-ios-sim"
+
+cd rust
 
 BUILD_TYPE=$1
 
