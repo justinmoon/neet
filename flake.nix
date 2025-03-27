@@ -97,6 +97,8 @@
 
                 # Java
                 pkgs.jdk17
+
+                xcode
               ];
 
               shellHook = ''
