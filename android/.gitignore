@@ -12,3 +12,7 @@ local.properties
 # rust code
 app/src/main/java/com/example/neet/uniffi
 app/src/main/jniLibs
+
+# kotlin-language-server uses this
+kls_database.db
+
