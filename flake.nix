@@ -22,14 +22,20 @@
   in {
     devShells = forAllSystems (
       system: let
-        pkgs = nixpkgsFor.${system};
+        pkgs = import nixpkgs {
+          inherit system;
+          config = {
+            allowUnfree = true;
+            android_sdk.accept_license = true;
+          };
+        };
 
         # Configure Android SDK
         androidSdk = android-nixpkgs.sdk.${system} (sdkPkgs:
           with sdkPkgs; [
             # Essential build tools
             cmdline-tools-latest
-            build-tools-33-0-1 # FIXME: why does it want this?
+            build-tools-35-0-0 # FIXME: why does it want this?
             platform-tools
 
             # Platform & API level
@@ -43,16 +49,24 @@
             system-images-android-34-google-apis-arm64-v8a
           ]);
       in {
-        default = pkgs.mkShell {
+        default = with pkgs; pkgs.mkShell {
           buildInputs = [
             androidSdk
-            pkgs.just
-            pkgs.watchexec
-            pkgs.libtool
-            pkgs.webrtc-audio-processing
-            pkgs.autoconf
-            pkgs.automake
-            pkgs.pkg-config
+              # android-studio
+
+            just
+            watchexec
+            libtool
+            webrtc-audio-processing
+            autoconf
+            automake
+            pkg-config
+
+            # Java
+            pkgs.jdk17
+
+            # editor tools
+            # kotlin-language-server
           ];
 
           shellHook = ''
@@ -62,6 +76,7 @@
             export ANDROID_HOME=${androidSdk}/share/android-sdk
             export ANDROID_SDK_ROOT=${androidSdk}/share/android-sdk
             export ANDROID_NDK_ROOT=${androidSdk}/share/android-sdk/ndk/28.0.13004108
+            export JAVA_HOME=${pkgs.jdk17}
             export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
 
             # Create a local bin directory for symlinks
