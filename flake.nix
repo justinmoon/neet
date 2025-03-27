@@ -8,12 +8,18 @@
       url = "github:tadfisher/android-nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
     android-nixpkgs,
+    rust-overlay,
   }: let
     supportedSystems = ["x86_64-linux" "x86_64-darwin" "aarch64-darwin"];
     forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
@@ -24,10 +30,25 @@
       system: let
         pkgs = import nixpkgs {
           inherit system;
+          overlays = [ rust-overlay.overlays.default ];
           config = {
             allowUnfree = true;
             android_sdk.accept_license = true;
           };
+        };
+
+        # Define Rust with cross-compilation targets for Android
+        rustWithAndroidTargets = pkgs.rust-bin.stable.latest.default.override {
+          targets = [
+            # Android
+            "aarch64-linux-android"
+            "armv7-linux-androideabi"
+            "i686-linux-android"
+            "x86_64-linux-android"
+            # iOS
+            "aarch64-apple-ios-sim"
+          ];
+          extensions = [ "rust-src" "rust-analyzer" "clippy" ];
         };
 
         # Configure Android SDK
@@ -52,8 +73,14 @@
         default = with pkgs; pkgs.mkShell {
           buildInputs = [
             androidSdk
-              # android-studio
+            # android-studio
 
+            # Rust with Android targets
+            rustWithAndroidTargets
+            
+            # cargo-ndk for Android builds
+            pkgs.cargo-ndk
+            
             just
             watchexec
             libtool

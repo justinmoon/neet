@@ -33,7 +33,7 @@ for TARGET in \
         # x86_64-apple-darwin \
         # x86_64-apple-ios
 do
-    rustup target add $TARGET
+    # rustup target add $TARGET
     cargo build --target=$TARGET $BUILD_FLAG
 done
  
