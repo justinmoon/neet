@@ -12,3 +12,6 @@ android/app/src/main/java/com/rmp/neet/uniffi/
 
 # hack to rename nix-installed stuff
 .nix-shell
+
+# emulator
+emulator

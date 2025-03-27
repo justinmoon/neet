@@ -39,14 +39,14 @@
             platform-tools
 
             # Platform & API level
-            platforms-android-34
+            platforms-android-35
 
             # NDK for native code compilation
             ndk-28-0-13004108
 
             # Emulator for testing
             emulator
-            system-images-android-34-google-apis-arm64-v8a
+            system-images-android-35-google-apis-arm64-v8a
           ]);
       in {
         default = with pkgs; pkgs.mkShell {
