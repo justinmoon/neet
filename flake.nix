@@ -68,8 +68,8 @@
               system-images-android-35-google-apis-arm64-v8a
             ]);
 
-          # Install Xcode
-          xcode = justin.lib.xcode { inherit pkgs; };
+          # Install Xcode - using local version with simulator fixes
+          xcode = import ./nix/xcode.nix { inherit pkgs; };
         in {
           default = with pkgs;
             pkgs.mkShell {
@@ -118,6 +118,10 @@
                 # https://github.com/tonarino/webrtc-audio-processing/blob/7f62ad3e815acf22b2925aca7501e8fc901104d3/webrtc-audio-processing-sys/build.rs#L93-L97
                 ln -sf "${pkgs.libtool}/bin/libtoolize" "$PWD/.nix-shell/bin/glibtoolize"
                 export PATH=$PWD/.nix-shell/bin:${pkgs.libtool}/bin:$PATH
+
+                xcode_app="Xcode.app"
+                export DEVELOPER_DIR="${xcode}/Applications/$xcode_app/Contents/Developer"
+
               '';
             };
         });

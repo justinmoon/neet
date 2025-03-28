@@ -12,14 +12,63 @@ export SDKROOT=$(xcrun -sdk iphonesimulator --show-sdk-path)
 mkdir -p .build/ios-wrapper
 cat > .build/ios-wrapper/clang-ios-sim << 'EOF'
 #!/bin/bash
+set -e
+
+# Only use Nix-provided clang
+if [ -z "$NIX_CLANG_PATH" ]; then
+  echo "ERROR: NIX_CLANG_PATH environment variable not set - unable to find Nix clang" >&2
+  exit 1
+fi
+
+# # Get SDK path from Nix-provided xcrun
+# if [ -z "$NIX_XCRUN_PATH" ]; then
+#   echo "ERROR: NIX_XCRUN_PATH environment variable not set - unable to find Nix xcrun" >&2
+#   exit 1
+# fi
+
+# Force override any SDK paths to use Nix-managed SDK
+SIMULATOR_SDK_PATH="$NIX_SDK_PATH"
+if [ -z "$SIMULATOR_SDK_PATH" ] || [ ! -d "$SIMULATOR_SDK_PATH" ]; then
+  echo "ERROR: NIX_SDK_PATH environment variable not set or invalid - unable to find iOS Simulator SDK" >&2
+  exit 1
+fi
+
+# Filter out macOS flags
 args=()
 for arg in "$@"; do
   if [[ "$arg" != "-mmacos-version-min="* ]]; then
     args+=("$arg")
   fi
 done
-clang "${args[@]}" -mios-simulator-version-min=14.0
+
+# Log what we're doing (for debugging)
+echo "Using clang: $NIX_CLANG_PATH" >&2
+echo "Using simulator SDK: $SIMULATOR_SDK_PATH" >&2
+
+# Call clang with explicit simulator flags
+"$NIX_CLANG_PATH" "${args[@]}" -isysroot "$SIMULATOR_SDK_PATH" -mios-simulator-version-min=14.0
 EOF
+
+# Set paths to Nix tools to pass to our wrapper
+export NIX_CLANG_PATH="${DEVELOPER_DIR}/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+# export NIX_XCRUN_PATH="${DEVELOPER_DIR}/usr/bin/xcrun"
+export NIX_SDK_PATH="${DEVELOPER_DIR}/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
+
+# Verify the Nix tools exist
+if [ ! -f "$NIX_CLANG_PATH" ]; then
+  echo "ERROR: Could not find Nix clang at $NIX_CLANG_PATH"
+  exit 1
+fi
+
+# if [ ! -f "$NIX_XCRUN_PATH" ]; then
+#   echo "ERROR: Could not find Nix xcrun at $NIX_XCRUN_PATH"
+#   exit 1
+# fi
+
+if [ ! -d "$NIX_SDK_PATH" ]; then
+  echo "ERROR: Could not find iOS Simulator SDK at $NIX_SDK_PATH"
+  exit 1
+fi
 chmod +x .build/ios-wrapper/clang-ios-sim
 
 # Set compiler variables for this build process only
